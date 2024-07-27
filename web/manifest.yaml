@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nginx-conf
+  namespace: roboshop
 data:
   nginx.conf: |
     user www-data;
@@ -84,7 +85,7 @@ data:
         }
 
         location /api/catalogue/ {
-            proxy_pass http://catalogue:8080/;
+            proxy_pass http://catalogue-service:8080/;
         }
 
         # location /api/user/ {

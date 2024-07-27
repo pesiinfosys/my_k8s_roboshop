@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  namespace: roboshop
+  labels: # these are deployment labels
+    app: user
+    tier: app
+    project: roboshop
+    env: dev
+spec:
+  replicas: 1
+  selector: # these labels should match with pod labels
+    matchLabels:
+      app: user
+      tier: app
+      project: roboshop
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: user
+        tier: app
+        project: roboshop
+        env: dev
+    spec:
+      containers:
+      - name: user
+        image: pesiinfosys/user:v1.0.0
+        envFrom:
+        - configMapRef:
+            name: user
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: roboshop
+spec:
+  selector:
+    app: user
+    tier: app
+    project: roboshop
+    env: dev
+  ports:
+  - name: user-service-port
+    protocol: TCP
+    port: 8080 # service port
+    targetPort: 8080 # container port
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user
+  namespace: roboshop
+data:
+  MONGO: "true"
+  MONGO_URL: "mongodb://mongodb-service:mongodb-service-port/user" # protocol://service_name:mongodbservicePort/schema
+  # mongodb://<MONGODB-SERVER-IPADDRESS>:27017/user
+  REDIS_HOST: "redis-service"
+

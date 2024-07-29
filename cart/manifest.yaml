@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
       - name: cart
-        image: pesiinfosys/cart:v1.0.0
+        image: pesiinfosys/cart:v1.0.1
         envFrom:
         - configMapRef:
             name: cart

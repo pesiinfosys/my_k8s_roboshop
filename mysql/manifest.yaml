@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  namespace: roboshop
+  labels: # these are deployment labels
+    app: mysql
+    tier: db
+    project: roboshop
+    env: dev
+spec:
+  replicas: 1
+  selector: # these labels should match with pod labels
+    matchLabels:
+      app: mysql
+      tier: db
+      project: roboshop
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: mysql
+        tier: db
+        project: roboshop
+        env: dev
+    spec:
+      containers:
+      - name: mysql
+        image: pesiinfosys/mysql:v1.0.0
+        envFrom:
+        - configMapRef:
+            name: mysql
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: roboshop
+spec:
+  selector:
+    app: mysql
+    tier: db
+    project: roboshop
+    env: dev
+  ports:
+  - name: mysql-service-port
+    protocol: TCP
+    port: 3306 # service port
+    targetPort: 3306 # container port
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql
+  namespace: roboshop
+data:
+  MONGO:MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+  MYSQL_DATABASE: "cities"
+  MYSQL_USER: "shipping"
+  MYSQL_PASSWORD: "RoboShop@1"
+

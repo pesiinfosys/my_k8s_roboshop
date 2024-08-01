@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping-deployment
+  namespace: roboshop
+  labels: # these are deployment labels
+    app: shipping
+    tier: app
+    project: roboshop
+    env: dev
+spec:
+  replicas: 1
+  selector: # these labels should match with pod labels
+    matchLabels:
+      app: shipping
+      tier: app
+      project: roboshop
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: shipping
+        tier: app
+        project: roboshop
+        env: dev
+    spec:
+      containers:
+      - name: shipping
+        image: pesiinfosys/shipping:v1.0.0
+        envFrom:
+        - configMapRef:
+            name: shipping
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping-service
+  namespace: roboshop
+spec:
+  selector:
+    app: shipping
+    tier: app
+    project: roboshop
+    env: dev
+  ports:
+  - name: shipping-service-port
+    protocol: TCP
+    port: 8080 # service port
+    targetPort: 8080 # container port
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shipping
+  namespace: roboshop
+data:
+  CART_ENDPOINT: "cart:8080"
+  DB_HOST: "mysql"
+

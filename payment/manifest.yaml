@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-deployment
+  namespace: roboshop
+  labels: # these are deployment labels
+    app: payment
+    tier: app
+    project: roboshop
+    env: dev
+spec:
+  replicas: 1
+  selector: # these labels should match with pod labels
+    matchLabels:
+      app: payment
+      tier: app
+      project: roboshop
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: payment
+        tier: app
+        project: roboshop
+        env: dev
+    spec:
+      containers:
+      - name: payment
+        image: pesiinfosys/payment:v1.0.0
+        envFrom:
+        - configMapRef:
+            name: payment
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  namespace: roboshop
+spec:
+  selector:
+    app: payment
+    tier: app
+    project: roboshop
+    env: dev
+  ports:
+  - name: payment-service-port
+    protocol: TCP
+    port: 8080 # service port
+    targetPort: 8080 # container port
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment
+  namespace: roboshop
+data:
+  CART_HOST: "cart-service"
+  CART_PORT: "cart-service-port"
+  USER_HOST: "user-service"
+  USER_PORT: "user-service-port"
+  AMQP_HOST: "rabbitmq-service"
+  AMQP_USER: "roboshop"
+  AMQP_PASS: "roboshop123"
+

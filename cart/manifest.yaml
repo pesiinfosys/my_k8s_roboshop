@@ -48,7 +48,7 @@ spec:
   - name: cart-service-port
     protocol: TCP
     port: 8080 # service port
-    targetPort: 8080 # container port
+    targetPort: 8080 ## container port
 
 ---
 apiVersion: v1
@@ -60,4 +60,6 @@ data:
   REDIS_HOST: "redis-service"
   CATALOGUE_HOST: "catalogue-service"
   CATALOGUE_PORT: "catalogue-service-port"
+
+  
 

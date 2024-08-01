@@ -62,6 +62,5 @@ data:
   USER_HOST: "user-service"
   USER_PORT: "user-service-port"
   AMQP_HOST: "rabbitmq-service"
-  AMQP_USER: "roboshop"
-  AMQP_PASS: "roboshop123"
+
 

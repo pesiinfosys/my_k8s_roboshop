@@ -57,6 +57,6 @@ metadata:
   name: shipping
   namespace: roboshop
 data:
-  CART_ENDPOINT: "cart:8080"
-  DB_HOST: "mysql"
+  CART_ENDPOINT: "cart-service:8080"
+  DB_HOST: "mysql-service"
 
